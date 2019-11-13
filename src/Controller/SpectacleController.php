@@ -27,6 +27,29 @@ class SpectacleController extends AbstractController
            $spectacles = $this->getDoctrine()->getRepository(Spectacle::class)->findAll();
            return $spectacles;
         }
+ /**
+     * @Rest\View()
+     * @Rest\Get("/spectacles/{id}")
+     */
+    public function getSpectacle(Request $request)
+    {
+      
+        $spectacle = $this->getDoctrine()
+        ->getRepository(Spectacle::class)
+                ->find($request->get('id')); // L'identifiant en tant que paramétre n'est plus nécessaire
+        /* @var $place Place */
+
+        if (empty($spectacle)) {
+            return $this->spectacleNotFound();
+        }
+        
+        return $spectacle;
+    
+    }
+    private function spectacleNotFound()
+    {
+        return \FOS\RestBundle\View\View::create(['message' => 'Spectacle not found'], Response::HTTP_NOT_FOUND);
+    }
 
 
 }
